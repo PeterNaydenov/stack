@@ -127,4 +127,15 @@ it ( 'Peek', () => {
 }) // it peek 
 
 
+
+it ( 'Pull from empty stack', () => {
+        let cache = stack ( 'fifo' );
+
+        cache.push ( 12 )
+        expect ( cache.pull() ).to.be.equal ( 12 )
+        expect ( cache.pull() ).to.be.equal ( undefined )
+        expect ( cache.pull() ).to.be.equal ( undefined )
+}) // it pull from empty
+
+
 }) // describe
