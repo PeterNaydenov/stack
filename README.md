@@ -2,7 +2,7 @@
 
 Build FIFO or FILO stack and operate with it.
 
-## Instalation
+## Installation
 
 Install the package:
 ```
