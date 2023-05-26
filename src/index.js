@@ -17,20 +17,25 @@ function stack (type='FIFO') {
                             } // filoPush func.
                     
             const
-                  pull    = () => storage.pop ()
-                , getSize = () => storage.length
+                  
+                  getSize = () => storage.length
+                , pull        = (n=1) => (n==1) ? storage.pop() : Array.from({length:n}).map ( () => storage.pop()   )
+                , pullReverse = (n=1) => (n==1) ? storage.pop () : Array.from({length:n}).map ( () => storage.pop()   ).reverse ()
                 , isEmpty = () => storage.length == 0
                 , debug   = () => [...storage ]
-                , peek    = () => storage[storage.length-1]
+                , peek        = (n=1) => (n==1) ? storage[storage.length-1] : storage.slice(-n).reverse ()
+                , peekReverse = (n=1) => (n==1) ? storage[storage.length-1] : storage.slice(-n)
                 , reset   = () => {
                                     storage = []
                                     return true
                                 }
-            
+        
             function F () {}
             F.prototype = { 
                               pull
+                            , pullReverse
                             , peek
+                            , peekReverse
                             , getSize
                             , isEmpty
                             , reset

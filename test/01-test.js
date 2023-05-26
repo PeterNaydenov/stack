@@ -128,6 +128,36 @@ it ( 'Peek', () => {
 
 
 
+it ( 'Peek more', () => {
+        let cache = stack ( 'fifo')
+
+        cache.push ( [54,33,88])
+        expect ( cache.peek(2) ).to.be.deep.equal ( [54,33] )
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+}) // it peek more
+
+
+
+it ( 'Peek more in reverse', () => {
+        let cache = stack ( 'fifo')
+
+        cache.push ( [54,33,88])
+        expect ( cache.peekReverse(2) ).to.be.deep.equal ( [33,54] )
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+}) // it peek more in reverse
+
+
+
+it ( 'Peek a single value with peekReverse', () => {
+        let cache = stack ( 'fifo')
+
+        cache.push ( [54,33,88])
+        expect ( cache.peekReverse() ).to.be.deep.equal ( 54 )
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+}) // it peek a single value with peekReverse
+
+
+
 it ( 'Pull from empty stack', () => {
         let cache = stack ( 'fifo' );
 
@@ -136,6 +166,55 @@ it ( 'Pull from empty stack', () => {
         expect ( cache.pull() ).to.be.equal ( undefined )
         expect ( cache.pull() ).to.be.equal ( undefined )
 }) // it pull from empty
+
+
+it ( 'Pull multiple values from filo stack', () => {
+        let cache = stack ( 'filo' );
+
+        cache.push ( [54,33,88] )
+        cache.push ( 13 )
+        expect ( cache.pull(2) ).to.be.deep.equal ( [13,88])
+}) // it pull multiple values
+
+
+
+it ( 'Pull-reverse multiple values from filo stack', () => {
+        let cache = stack ( 'filo' );
+
+        cache.push ( [54,33,88] )
+        cache.push ( 13 )
+        expect ( cache.pullReverse(2) ).to.be.deep.equal ( [88,13])
+}) // it pull multiple values
+
+
+
+it ( 'Pull multiple values from fifo stack', () => {
+        const cache = stack ( 'fifo' );
+
+        cache.push ( [54,33,88] )
+        cache.push ( 13 )
+        expect ( cache.pull(2)).to.be.deep.equal ( [ 54,33] )
+})
+
+
+
+it ( 'Pull-reverse multiple values from fifo stack', () => {
+        const cache = stack ( 'fifo' );
+
+        cache.push ( [54,33,88] )
+        cache.push ( 13 )
+        expect ( cache.pullReverse(2)).to.be.deep.equal ( [ 33,54] )
+}) // it Pull-reverse multiple values from fifo stack
+
+
+
+it ( 'Pull-reverse a single value from fifo stack', () => {
+        const cache = stack ( 'fifo' );
+
+        cache.push ( [54,33,88] )
+        cache.push ( 13 )
+        expect ( cache.pullReverse()).to.be.deep.equal ( 54 )
+}) // it Pull-reverse a single value from fifo stack
 
 
 }) // describe
