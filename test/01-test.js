@@ -1,7 +1,11 @@
-const
-  stack  = require ('../src/index.js')
-, expect  = require ( 'chai' ).expect
-;
+'use strict'
+
+
+
+import stack from '../src/index.js'
+import { expect } from 'chai'
+
+
 
 describe ( 'Stack Tests', () => {
 
@@ -27,10 +31,8 @@ it ( 'Create and use FIFO stack', () => {
 
 
 
-
-
 it ( 'Create and use FILO stack', () => {
-    let cache = stack ('FiLo');   // Param should not be case sesitive
+    let cache = stack ({type:'FiLo'});   // Param should not be case sesitive
         
     // Stack empty?
     expect ( cache.isEmpty() ).to.be.true
@@ -49,8 +51,6 @@ it ( 'Create and use FILO stack', () => {
 
 
 
-
-
 it ( 'Push object', () => {
         let cache = stack (); // default stack should be FIFO
 
@@ -60,10 +60,8 @@ it ( 'Push object', () => {
 
 
 
-
-
 it ( 'Push multiple items at once', () => {   
-        let cache = stack ('FIFO'); 
+        let cache = stack ({type:'FIFO'}); 
 
         cache.push ( [3,55,77])
         expect ( cache.pull() ).to.be.equal (3)
@@ -71,11 +69,12 @@ it ( 'Push multiple items at once', () => {
 }) // it push at once
 
 
+
 it ( 'Push array', () => {
         let 
-              cache = stack ( 'FIFO' )
+              cache = stack ({ type:'FIFO' })
             , arr = [3,55,77]
-            , cacheFILO = stack ( 'FILO' )
+            , cacheFILO = stack ({ type: 'FILO' })
             ;
         
         cache.push ( [arr] )
@@ -87,8 +86,81 @@ it ( 'Push array', () => {
 
 
 
+it ( 'Push in FIFO stack with limit. On limit - update', () => {
+        let cache = stack ({
+                                  type: 'fifo'
+                                , limit : 4
+                                , onLimit : 'update'
+                        });
+        cache.push ([50,51,52])
+        let extra = cache.push ([60,61,62])   // Push to 'limited stack with update' will return the removed items
+        const 
+               list = cache.debug ()
+             , res = cache.pull()
+             ;
+        expect ( res ).to.be.equal ( 52 )
+        expect ( list ).to.contains ( 62 )
+        expect ( extra ).to.be.deep.equal ([50,51])
+}) // it Push in FIFO stack with limit. On limit - update
+
+
+
+it ( 'Push in FIFO stack with limit. On limit - full', () => {
+        let cache = stack ({
+                                  type: 'fifo'
+                                , limit : 4
+                                , onLimit : 'full'
+                        });
+        cache.push ([50,51,52])
+        let extra = cache.push ([60,61,62])   // Push to 'limited stack with full' will ignore items that are over
+        const list = cache.debug ();
+            
+        expect ( list[list.length-1] ).to.be.equal ( 50 )
+        expect ( list ).to.not.contains ( 61 )
+        expect ( extra ).to.be.undefined
+}) // it Push in FIFO stack with limit. On limit - full
+
+
+
+it ( 'Push in FILO stack with limit. On limit - update', () => {
+        let cache = stack ({
+                                          type    : 'filo'
+                                        , limit   : 4
+                                        , onLimit : 'update'
+                                });
+        cache.push ([50,51,52])
+        let extra = cache.push ([60,61,62]);   // Push to 'limited stack with update' will return the removed items
+        const 
+                list = cache.debug ()
+                , res = cache.pull()
+                ;
+        expect ( res ).to.be.equal ( 62 )
+        expect ( list ).to.contains ( 60 )
+        expect ( list ).to.not.contains ( 51 )
+
+        expect ( extra ).to.be.deep.equal ([52,51])
+}) // it Push in FILO stack with limit. On limit - update
+
+
+
+it ( 'Push in FILO stack with limit. On limit - full', () => {
+        let cache = stack ({
+                                          type    : 'filo'
+                                        , limit   : 4
+                                        , onLimit : 'full'
+                                });
+        cache.push ([50,51,52])
+        let extra = cache.push ([60,61,62]);   // Push to 'limited stack with update' will return the removed items
+        const list = cache.debug ();
+
+        expect ( list ).to.be.deep.equal ([50,51,52,60])
+        expect ( extra ).to.be.undefined
+}) // it Push in FILO stack with limit. On limit - full
+
+
+
 it ( 'Use GetSize', () => {
-        let cache = stack ( 'FILO' );
+        let cache = stack ({ type: 'FILO' });
 
         expect ( cache.getSize() ).to.be.equal ( 0 )
         cache.push ( 12 )
@@ -96,8 +168,9 @@ it ( 'Use GetSize', () => {
 }) // it getSize
 
 
+
 it ( 'Reset', () => {
-        let cache = stack ('FIFO' );
+        let cache = stack ({ type: 'FIFO' });
 
         cache.push ([2,64,32,99])
         expect ( cache.getSize() ).to.be.equal ( 4 )
@@ -106,10 +179,11 @@ it ( 'Reset', () => {
 }) // it reset
 
 
+
 it ( 'Two stacks', () => {
         let
-              cache1 = stack ( 'FIFO' )
-            , cache2 = stack ( 'FIFO' )
+              cache1 = stack ({ type: 'FIFO' })
+            , cache2 = stack ({ type: 'FIFO' })
             ;
 
         cache1.push ([21])
@@ -118,8 +192,9 @@ it ( 'Two stacks', () => {
 }) // it two stacks
 
 
+
 it ( 'Peek', () => {
-        let cache = stack ( 'fifo')
+        let cache = stack ({ type: 'fifo' })
 
         cache.push ( [54,33,88])
         expect ( cache.peek() ).to.be.equal ( 54 )
@@ -129,7 +204,7 @@ it ( 'Peek', () => {
 
 
 it ( 'Peek more', () => {
-        let cache = stack ( 'fifo')
+        let cache = stack ({ type: 'fifo' })
 
         cache.push ( [54,33,88])
         expect ( cache.peek(2) ).to.be.deep.equal ( [54,33] )
@@ -139,7 +214,7 @@ it ( 'Peek more', () => {
 
 
 it ( 'Peek more in reverse', () => {
-        let cache = stack ( 'fifo')
+        let cache = stack ({ type: 'fifo' })
 
         cache.push ( [54,33,88])
         expect ( cache.peekReverse(2) ).to.be.deep.equal ( [33,54] )
@@ -149,7 +224,7 @@ it ( 'Peek more in reverse', () => {
 
 
 it ( 'Peek a single value with peekReverse', () => {
-        let cache = stack ( 'fifo')
+        let cache = stack ({ type: 'fifo' })
 
         cache.push ( [54,33,88])
         expect ( cache.peekReverse() ).to.be.deep.equal ( 54 )
@@ -159,7 +234,7 @@ it ( 'Peek a single value with peekReverse', () => {
 
 
 it ( 'Pull from empty stack', () => {
-        let cache = stack ( 'fifo' );
+        let cache = stack ({ type: 'fifo' });
 
         cache.push ( 12 )
         expect ( cache.pull() ).to.be.equal ( 12 )
@@ -168,8 +243,9 @@ it ( 'Pull from empty stack', () => {
 }) // it pull from empty
 
 
+
 it ( 'Pull multiple values from filo stack', () => {
-        let cache = stack ( 'filo' );
+        let cache = stack ({ type: 'filo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -179,7 +255,7 @@ it ( 'Pull multiple values from filo stack', () => {
 
 
 it ( 'Pull-reverse multiple values from filo stack', () => {
-        let cache = stack ( 'filo' );
+        let cache = stack ({ type: 'filo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -189,7 +265,7 @@ it ( 'Pull-reverse multiple values from filo stack', () => {
 
 
 it ( 'Pull multiple values from fifo stack', () => {
-        const cache = stack ( 'fifo' );
+        const cache = stack ({ type: 'fifo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -199,7 +275,7 @@ it ( 'Pull multiple values from fifo stack', () => {
 
 
 it ( 'Pull-reverse multiple values from fifo stack', () => {
-        const cache = stack ( 'fifo' );
+        const cache = stack ({ type: 'fifo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -209,12 +285,41 @@ it ( 'Pull-reverse multiple values from fifo stack', () => {
 
 
 it ( 'Pull-reverse a single value from fifo stack', () => {
-        const cache = stack ( 'fifo' );
+        const cache = stack ({ type: 'fifo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
         expect ( cache.pullReverse()).to.be.deep.equal ( 54 )
 }) // it Pull-reverse a single value from fifo stack
 
+
+
+it ( 'Pull with skiping', () => {
+        const st = stack ({ type:'FIFO' })
+        st.push ([1,2])
+        st.push ([3,4,5,6])
+        const result =  st.pull( 2, 2 );
+        expect ( result ).to.be.deep.equal ([ 3, 4])
+}) // it pull with skiping
+
+
+
+it ( 'Pull with skiping', () => {
+        const st = stack ({ type:'FIFO' })
+        st.push ([1,2])
+        st.push ([3,4,5,6])
+        const result =  st.pull( 5, 3 );  // We are searching for 5 elements after skipping the first 3
+        expect ( result ).to.be.deep.equal ([ 4, 5, 6 ]) // The stack has only 3 elements left
+}) // it pull with skiping
+
+
+
+it ( 'Peek with skiping', () => {
+        const st = stack ({ type:'FIFO' })
+        st.push ([1,2])
+        st.push ([3,4,5,6])
+        const result =  st.peek( 2, 2 );
+        expect ( result ).to.be.deep.equal ([ 3, 4])
+}) // it Peek with skiping
 
 }) // describe
