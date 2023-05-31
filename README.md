@@ -22,7 +22,7 @@ import stack from '@peter.naydenov/stack'
 
 
 
-## Create stack
+## Create a stack
 
 Call the stack function will create an empty stack. There is a non-required argument `options`. Here is an example:
 ```js
