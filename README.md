@@ -46,6 +46,7 @@ Call the stack function will create an empty stack. There is a non-required argu
 , 'pull'        : 'Retreve data from the stack. Single value or pull more then one value at the time'
 , 'pullReverse' : 'When we want to pull more then one value, but in reverse order' 
 , 'peek'        : 'Peek the next value without extracting it from the stack'
+, 'peekReverse' : 'When we want to peek more then one value, but in reverse order'
 , 'getSize'     : 'Returns the size of the stack'
 , 'isEmpty'     : 'Returns "true" if size of stack is 0'
 , 'reset'       : 'Removes content from the stack'
