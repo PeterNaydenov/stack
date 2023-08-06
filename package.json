@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/PeterNaydenov/stack#readme",
   "devDependencies": {
-    "c8": "^7.14.0",
+    "c8": "^8.0.1",
     "chai": "4.3.7",
     "mocha": "10.2.0"
   },
