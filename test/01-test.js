@@ -322,4 +322,24 @@ it ( 'Peek with skiping', () => {
         expect ( result ).to.be.deep.equal ([ 3, 4])
 }) // it Peek with skiping
 
+
+
+it ( 'Back and forword', () => {
+        // Walk in history records - back and forword
+        const
+               back = stack ({ type:'FILO' })
+             , forward = stack ({ type:'FILO' })
+             ;
+
+        back.push ([1,2,3,4,5]) // Init history
+        expect ( back.peek()).to.be.equal ( 5 ) // First available record to pull
+        forward.push ( back.pull(2) ) // Move back 2 records
+        forward.push ( back.pull(2) ) // Move back 2 records
+        const position = forward.pull () // Get state 4 steps back
+        expect ( position ).to.be.equal ( 2 )
+        expect ( forward.peek() ).to.be.equal ( 3 )    // Next to take from forword
+        expect ( forward.getSize() ).to.be.equal ( 3 ) // There are 3 records in forword        
+        expect ( back.getSize() ).to.be.equal ( 1 )    // There is 1 record in back
+}) // it back and forword
+
 }) // describe
