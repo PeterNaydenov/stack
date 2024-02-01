@@ -1,10 +1,10 @@
-function stack (inOptions={}) {
-    // *** Creates "FIFO" or "FILO" stacks  
+function stack ( inOptions={} ) {
+    // *** Creates "FIFO" or "LIFO" stacks  
             let 
                  storage = []
                , defaultOptions = { type: 'FIFO', limit: false, onLimit: 'update' } 
                , { type, limit, onLimit } = Object.assign ({}, defaultOptions, inOptions )
-               , isFilo = type.toUpperCase () === 'FILO' ? true : false
+               , isLIFO = type.toUpperCase () === 'LIFO' ? true : false
                , isFull = false
                ;
             
@@ -29,7 +29,7 @@ function stack (inOptions={}) {
                 
 
 
-            function filoPush ( vals ) {
+            function lifoPush ( vals ) {
                                     const 
                                           isArray = vals instanceof Array
                                         , ln = isArray ? vals.length : 1
@@ -46,7 +46,7 @@ function stack (inOptions={}) {
                                     else                           storage = storage.concat ( [vals] )
                                     isFull = limit ? ( storage.length === limit ) : false
                                     if ( extra )    return extra
-                        } // filoPush func.
+                        } // lifoPush func.
 
 
 
@@ -122,7 +122,7 @@ function stack (inOptions={}) {
                             , reset
                             , debug 
                         }
-            F.prototype.push = ( isFilo ) ? filoPush : fifoPush;
+            F.prototype.push = ( isLIFO ) ? lifoPush : fifoPush;
             return new F();
     } // Stack func.
     

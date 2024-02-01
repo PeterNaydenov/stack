@@ -1,5 +1,9 @@
 # Migration Guides
 
+### From v.2.x.x - v.3.x.x
+
+Word 'FILO' was changed to 'LIFO' to be more consistent with the rest of the world. No other changes were made.
+
 
 
 ## From v.1.x.x - v.2.x.x

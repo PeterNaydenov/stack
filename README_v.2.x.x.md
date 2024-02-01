@@ -1,13 +1,7 @@
 # Stack (@peter.naydenov/stack)
-![version](https://img.shields.io/github/package-json/v/peterNaydenov/stack)
-![license](https://img.shields.io/github/license/peterNaydenov/stack)
-![issues](https://img.shields.io/github/issues/peterNaydenov/stack)
-![language](https://img.shields.io/github/languages/top/peterNaydenov/stack)
-![npm bundle size (scoped version)](https://img.shields.io/bundlephobia/minzip/%40peter.naydenov/stack/3.0.0)
 
+Build FIFO or FILO stack and operate with it.
 
-
-Build FIFO or LIFO stack and operate with it. You can set a limit of the stack and define how to react when limit is reached. You can pull single or multiple items from the stack. You can peek the next item without extracting it from the stack. You can reset the stack and start over again. You can check the size of the stack or if it is empty. You can debug the stack and see its content. You can use it in Node.js or in the browser.
 
 
 
@@ -24,12 +18,6 @@ Import the module from the script
 import stack from '@peter.naydenov/stack'
 ```
 
-or require it
-```js
-const stack = require('@peter.naydenov/stack')
-```
-
-
 
 
 
@@ -40,7 +28,7 @@ Call the stack function will create an empty stack. There is a non-required argu
 ```js
   // Calling function 'stack' without argument will return FIFO stack
   const cache = stack ({
-                        type : 'FIFO'  // Possible values: 'FIFO'(default) or 'LIFO'
+                        type : 'FIFO'  // Possible values: 'FIFO'(default) or 'FILO'
                         limit : 10  // Possible values: 'false'(default) or number(number of items)
                         onLimit : 'update'  // Possible values: 'full' or 'update'(default)
                     });
@@ -65,7 +53,6 @@ Call the stack function will create an empty stack. There is a non-required argu
 , 'debug'       : 'Will return content of the stack'
 }
 ```
-
 
 ### stack.push ()
 Insert item or items to the stack. 
@@ -106,32 +93,32 @@ Retreve data from the stack. Single value or pull more then one value at the tim
 Here are some examples:
 ```js
 const 
-    lifo = stack ({type:'LIFO'})
-  , fifo  = stack () // by default is FIFO
+    filo = stack ({type:'FILO'})
+  , fifo = stack () // by default is FIFO
   , items = [1,2,3,4,5,6]
   ;
 
- lifo.push ( items )
+ filo.push ( items )
  fifo.push ( items )
 
- lifo.pull()   // -> 6. Function 'pull' will remove the element from the stack.
- fifo.pull ()   // -> 1. Function 'pull' will remove the element from the stack.
+ filo.pull()  // -> 6. Function 'pull' will remove the element from the stack.
+ fifo.pull () // -> 1. Function 'pull' will remove the element from the stack.
 
- lifo.pull(2) // -> [5,4]. Stack 'lifo' after operation: [ 1, 2, 3 ]
- fifo.pull(2) // -> [2,3]. Stack 'fifo' after operation: [ 6, 5, 4 ]
+ filo.pull(2) // -> [5,4]. Stack 'filo' at the moment [ 1, 2, 3 ]
+ fifo.pull(2) // -> [2,3]. Stack at the moment is [ 6, 5, 4 ]
 
  // Let's reset both stacks
- lifo.reset()
+ filo.reset()
  fifo.reset()
 
  // load items again
- lifo.push ( items )
+ filo.push ( items )
  fifo.push ( items )
 
  // Pull can skip some results
  // stack.pull ( numberOfItems, skipItems )
- lifo.pull (3,1) // Skip the first pull, get 3 elements. -> [ 5, 4, 3]
- // stack 'lifo' after the operation -> [ 1, 2 ]
+ filo.pull (3,1) // Skip the first pull, get 3 elements. -> [ 5, 4, 3]
+ // stack 'filo' after the operation -> [ 1, 2 ]
  fifo.pull ( 3,2 ) // Skip 2 elements, get next 3. -> [ 3, 4, 5 ]
  // stack 'fifo' after the operation -> [ 6 ]
 ```
@@ -139,11 +126,7 @@ const
 
 
 
-## Links
-- [Release history](Changelog.md)
-- [Migration guide](Migration.md)
-- [Documentation for version 2.x.x](README-2.x.x.md)
-- [Documentation for version 1.x.x](README-1.x.x.md)
+
 
 
 

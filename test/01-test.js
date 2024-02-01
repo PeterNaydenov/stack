@@ -32,7 +32,7 @@ it ( 'Create and use FIFO stack', () => {
 
 
 it ( 'Create and use FILO stack', () => {
-    let cache = stack ({type:'FiLo'});   // Param should not be case sesitive
+    let cache = stack ({type:'LIFO'});   // Param should not be case sesitive
         
     // Stack empty?
     expect ( cache.isEmpty() ).to.be.true
@@ -74,14 +74,14 @@ it ( 'Push array', () => {
         let 
               cache = stack ({ type:'FIFO' })
             , arr = [3,55,77]
-            , cacheFILO = stack ({ type: 'FILO' })
+            , cacheLIFO = stack ({ type: 'LIFO' })
             ;
         
         cache.push ( [arr] )
         expect ( cache.pull() ).to.be.deep.equal ( arr )
 
-        cacheFILO.push ( [arr] )
-        expect ( cacheFILO.pull() ).to.be.deep.equal ( arr )
+        cacheLIFO.push ( [arr] )
+        expect ( cacheLIFO.pull() ).to.be.deep.equal ( arr )
 }) // it push array
 
 
@@ -122,9 +122,9 @@ it ( 'Push in FIFO stack with limit. On limit - full', () => {
 
 
 
-it ( 'Push in FILO stack with limit. On limit - update', () => {
+it ( 'Push in LIFO stack with limit. On limit - update', () => {
         let cache = stack ({
-                                          type    : 'filo'
+                                          type    : 'lifo'
                                         , limit   : 4
                                         , onLimit : 'update'
                                 });
@@ -139,13 +139,13 @@ it ( 'Push in FILO stack with limit. On limit - update', () => {
         expect ( list ).to.not.contains ( 51 )
 
         expect ( extra ).to.be.deep.equal ([52,51])
-}) // it Push in FILO stack with limit. On limit - update
+}) // it Push in LIFO stack with limit. On limit - update
 
 
 
-it ( 'Push in FILO stack with limit. On limit - full', () => {
+it ( 'Push in LIFO stack with limit. On limit - full', () => {
         let cache = stack ({
-                                          type    : 'filo'
+                                          type    : 'lifo'
                                         , limit   : 4
                                         , onLimit : 'full'
                                 });
@@ -155,12 +155,12 @@ it ( 'Push in FILO stack with limit. On limit - full', () => {
 
         expect ( list ).to.be.deep.equal ([50,51,52,60])
         expect ( extra ).to.be.undefined
-}) // it Push in FILO stack with limit. On limit - full
+}) // it Push in LIFO stack with limit. On limit - full
 
 
 
 it ( 'Use GetSize', () => {
-        let cache = stack ({ type: 'FILO' });
+        let cache = stack ({ type: 'LIFO' });
 
         expect ( cache.getSize() ).to.be.equal ( 0 )
         cache.push ( 12 )
@@ -182,8 +182,8 @@ it ( 'Reset', () => {
 
 it ( 'Two stacks', () => {
         let
-              cache1 = stack ({ type: 'FIFO' })
-            , cache2 = stack ({ type: 'FIFO' })
+              cache1 = stack ({ type: 'LIFO' })
+            , cache2 = stack ({ type: 'LIFO' })
             ;
 
         cache1.push ([21])
@@ -244,8 +244,8 @@ it ( 'Pull from empty stack', () => {
 
 
 
-it ( 'Pull multiple values from filo stack', () => {
-        let cache = stack ({ type: 'filo' });
+it ( 'Pull multiple values from lifo stack', () => {
+        let cache = stack ({ type: 'lifo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -254,8 +254,8 @@ it ( 'Pull multiple values from filo stack', () => {
 
 
 
-it ( 'Pull-reverse multiple values from filo stack', () => {
-        let cache = stack ({ type: 'filo' });
+it ( 'Pull-reverse multiple values from lifo stack', () => {
+        let cache = stack ({ type: 'lifo' });
 
         cache.push ( [54,33,88] )
         cache.push ( 13 )
@@ -327,8 +327,8 @@ it ( 'Peek with skiping', () => {
 it ( 'Back and forword', () => {
         // Walk in history records - back and forword
         const
-               back = stack ({ type:'FILO' })
-             , forward = stack ({ type:'FILO' })
+               back = stack ({ type:'LIFO' })
+             , forward = stack ({ type:'LIFO' })
              ;
 
         back.push ([1,2,3,4,5]) // Init history

@@ -1,33 +1,48 @@
 {
   "name": "@peter.naydenov/stack",
-  "version": "2.0.0",
   "description": "Build stacks. FIFO and LIFO.",
-  "main": "src/index.js",
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": "Peter Naydenov",
+  "main": "./dist/stack.umd.js",
   "type": "module",
+  "exports" : {
+    "." : {
+      "import" : "./dist/stack.esm.mjs",
+      "require" : "./dist/stack.cjs",
+      "default" : "./dist/stack.umd.js"
+    },
+    "./package.json" : "./package.json",
+    "./dist/*" : "./dist/*",
+    "./src/*" : "./src/*"
+  },
   "scripts": {
     "test": "mocha test",
-    "cover": "c8 mocha test"
+    "cover": "c8 mocha test",
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PeterNaydenov/stack.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "c8": "^9.1.0",
+    "chai": "5.0.3",
+    "mocha": "10.2.0",
+    "rollup": "^4.9.6"
   },
   "keywords": [
     "fifo",
     "lifo",
     "stack"
   ],
-  "author": "Peter Naydenov",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/PeterNaydenov/stack/issues"
-  },
   "homepage": "https://github.com/PeterNaydenov/stack#readme",
-  "devDependencies": {
-    "c8": "^8.0.1",
-    "chai": "4.3.10",
-    "mocha": "10.2.0"
-  },
+  "bugs": {
+        "url": "https://github.com/PeterNaydenov/stack/issues"
+      },
   "c8": {
     "include": [
       "src/**/*.js"

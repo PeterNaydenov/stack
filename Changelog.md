@@ -1,5 +1,16 @@
 ## Release History
 
+
+
+### 3.0.0 ( 2024-02-01)
+- [x] Previous version was working with "FIFO" and "FILO". Name "FILO" was change to "LIFO" to be more consistent with the rest of the world. No other changes were made;
+- [x] Documentation was updated according to the new version;
+- [x] Package.json: "exports" section was added. Allows you to use package as commonjs or es6 module without additional configuration;
+- [x] Folder 'dist' was added to the project. Includes commonjs, umd and esm versions of the library;
+- [x] Rollup was added to the project. Used to build the library versions;
+
+
+
 ### 2.0.0 (2023-05-30)
 - [x] Options as an object;
 - [x] New option - limit;
