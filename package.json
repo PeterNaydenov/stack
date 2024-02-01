@@ -1,20 +1,20 @@
 {
   "name": "@peter.naydenov/stack",
   "description": "Build stacks. FIFO and LIFO.",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "author": "Peter Naydenov",
   "main": "./dist/stack.umd.js",
   "type": "module",
-  "exports" : {
-    "." : {
-      "import" : "./dist/stack.esm.mjs",
-      "require" : "./dist/stack.cjs",
-      "default" : "./dist/stack.umd.js"
+  "exports": {
+    ".": {
+      "import": "./dist/stack.esm.mjs",
+      "require": "./dist/stack.cjs",
+      "default": "./dist/stack.umd.js"
     },
-    "./package.json" : "./package.json",
-    "./dist/*" : "./dist/*",
-    "./src/*" : "./src/*"
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
   },
   "scripts": {
     "test": "mocha test",
@@ -41,8 +41,8 @@
   ],
   "homepage": "https://github.com/PeterNaydenov/stack#readme",
   "bugs": {
-        "url": "https://github.com/PeterNaydenov/stack/issues"
-      },
+    "url": "https://github.com/PeterNaydenov/stack/issues"
+  },
   "c8": {
     "include": [
       "src/**/*.js"
