@@ -26,7 +26,7 @@
     "url": "git+https://github.com/PeterNaydenov/stack.git"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-commonjs": "^28.0.7",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "c8": "^10.1.3",
