@@ -6,8 +6,10 @@
   "author": "Peter Naydenov",
   "main": "./dist/stack.umd.js",
   "type": "module",
+  "types": "./dist/stack.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/stack.d.ts",
       "import": "./dist/stack.esm.mjs",
       "require": "./dist/stack.cjs",
       "default": "./dist/stack.umd.js"
@@ -19,7 +21,8 @@
   "scripts": {
     "test": "mocha test",
     "cover": "c8 mocha test",
-    "build": "rollup -c"
+    "build:types": "tsc --project tsconfig.json && node -e \"require('fs').renameSync('dist/index.d.ts', 'dist/stack.d.ts')\"",
+    "build": "npm run build:types && rollup -c"
   },
   "repository": {
     "type": "git",
@@ -32,7 +35,8 @@
     "c8": "^11.0.0",
     "chai": "6.2.2",
     "mocha": "11.7.6",
-    "rollup": "^4.61.1"
+    "rollup": "^4.61.1",
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "diff": "^8.0.4",
