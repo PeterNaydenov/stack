@@ -324,6 +324,53 @@ it ( 'Peek with skiping', () => {
 
 
 
+// -- Regression: peek(1, skip) used to ignore 'skip' and return the unskipped
+//    next value. It now matches the behavior of the n>1 branch and of pull().
+
+
+
+it ( 'Peek single value honors skip (FIFO)', () => {
+        const st = stack ({ type: 'FIFO' });
+        st.push ([1,2,3,4,5,6]);
+        // next-to-pull is 1; skip 3 then peek -> 4
+        expect ( st.peek (1, 3) ).to.be.equal ( 4 );
+        // peek does not extract; size is preserved
+        expect ( st.getSize() ).to.be.equal ( 6 );
+        // next-to-pull is still 1
+        expect ( st.pull() ).to.be.equal ( 1 );
+}) // it peek single honors skip fifo
+
+
+
+it ( 'Peek single value honors skip (LIFO)', () => {
+        const st = stack ({ type: 'LIFO' });
+        st.push ([1,2,3,4,5,6]);
+        // LIFO next-to-pull is 6; skip 3 then peek -> 3
+        expect ( st.peek (1, 3) ).to.be.equal ( 3 );
+        expect ( st.getSize() ).to.be.equal ( 6 );
+        expect ( st.pull() ).to.be.equal ( 6 );
+}) // it peek single honors skip lifo
+
+
+
+it ( 'Peek single value with skip 0 is unchanged', () => {
+        const st = stack ({ type: 'FIFO' });
+        st.push ([10,20,30]);
+        expect ( st.peek (1, 0) ).to.be.equal ( 10 );
+        expect ( st.peek (1)    ).to.be.equal ( 10 );
+}) // it peek single with skip 0
+
+
+
+it ( 'Peek single value with skip larger than the stack returns undefined', () => {
+        const st = stack ({ type: 'FIFO' });
+        st.push ([1,2,3]);
+        expect ( st.peek (1, 10) ).to.be.equal ( undefined );
+        expect ( st.getSize() ).to.be.equal ( 3 );
+}) // it peek single skip larger than stack
+
+
+
 it ( 'Back and forword', () => {
         // Walk in history records - back and forword
         const
@@ -338,8 +385,92 @@ it ( 'Back and forword', () => {
         const position = forward.pull () // Get state 4 steps back
         expect ( position ).to.be.equal ( 2 )
         expect ( forward.peek() ).to.be.equal ( 3 )    // Next to take from forword
-        expect ( forward.getSize() ).to.be.equal ( 3 ) // There are 3 records in forword        
+        expect ( forward.getSize() ).to.be.equal ( 3 ) // There are 3 records in forword
         expect ( back.getSize() ).to.be.equal ( 1 )    // There is 1 record in back
 }) // it back and forword
+
+
+
+// -- Regression: single (non-array) value pushed into a limited stack -------------
+// Previously these calls threw `TypeError: vals.slice is not a function` because
+// the onLimit:'full' branch tried to slice the raw value.
+
+
+
+it ( 'FIFO single-value push at limit boundary (onLimit: full) does not throw', () => {
+        const cache = stack ({ type: 'FIFO', limit: 4, onLimit: 'full' });
+        cache.push ([50,51,52]);   // storage = [52,51,50], isFull = false
+        // size = 1 + 3 = 4 = limit. Pre-fix: this threw.
+        const extra = cache.push (99);
+        expect ( extra ).to.be.undefined
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+        expect ( cache.debug() ).to.be.deep.equal ([52,51,50])
+}) // it fifo single-value push at limit boundary full
+
+
+
+it ( 'LIFO single-value push at limit boundary (onLimit: full) does not throw', () => {
+        const cache = stack ({ type: 'LIFO', limit: 4, onLimit: 'full' });
+        cache.push ([50,51,52]);   // storage = [50,51,52]
+        const extra = cache.push (99);
+        expect ( extra ).to.be.undefined
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+        expect ( cache.debug() ).to.be.deep.equal ([50,51,52])
+}) // it lifo single-value push at limit boundary full
+
+
+
+it ( 'FIFO single-value push at limit boundary (onLimit: update) accepts the value', () => {
+        const cache = stack ({ type: 'FIFO', limit: 4, onLimit: 'update' });
+        cache.push ([50,51,52]);
+        const extra = cache.push (99);   // size = 1 + 3 = 4 = limit → no eviction needed
+        expect ( extra ).to.be.deep.equal ([])
+        expect ( cache.getSize() ).to.be.equal ( 4 )
+        expect ( cache.debug() ).to.contains ( 99 )
+}) // it fifo single-value push at limit boundary update
+
+
+
+it ( 'LIFO single-value push at limit boundary (onLimit: update) accepts the value', () => {
+        const cache = stack ({ type: 'LIFO', limit: 4, onLimit: 'update' });
+        cache.push ([50,51,52]);
+        const extra = cache.push (99);
+        expect ( extra ).to.be.deep.equal ([])
+        expect ( cache.getSize() ).to.be.equal ( 4 )
+        expect ( cache.debug() ).to.contains ( 99 )
+}) // it lifo single-value push at limit boundary update
+
+
+
+it ( 'FIFO single-value push overflowing the limit (onLimit: update) evicts the oldest', () => {
+        const cache = stack ({ type: 'FIFO', limit: 3, onLimit: 'update' });
+        cache.push (1);
+        cache.push (2);
+        cache.push (3);             // full at limit
+        const extra = cache.push (4);   // size = 1 + 3 = 4 > 3 → evict 1 item (returns scalar, not array)
+        expect ( extra ).to.be.equal ( 1 )
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+        expect ( cache.pull() ).to.be.equal ( 2 )
+        expect ( cache.pull() ).to.be.equal ( 3 )
+        expect ( cache.pull() ).to.be.equal ( 4 )
+}) // it fifo single-value push overflowing update
+
+
+
+it ( 'LIFO single-value push overflowing the limit (onLimit: update) evicts the LIFO top', () => {
+        // LIFO+update drops the most-recently-pushed item to make room for the
+        // incoming one (the next-out item is the one sacrificed). The returned
+        // scalar is the single evicted value, not a one-element array.
+        const cache = stack ({ type: 'LIFO', limit: 3, onLimit: 'update' });
+        cache.push (1);
+        cache.push (2);
+        cache.push (3);
+        const extra = cache.push (4);   // size = 1 + 3 = 4 > 3 → evict 1 item from the LIFO top
+        expect ( extra ).to.be.equal ( 3 )
+        expect ( cache.getSize() ).to.be.equal ( 3 )
+        expect ( cache.pull() ).to.be.equal ( 4 )
+        expect ( cache.pull() ).to.be.equal ( 2 )
+        expect ( cache.pull() ).to.be.equal ( 1 )
+}) // it lifo single-value push overflowing update
 
 }) // describe
